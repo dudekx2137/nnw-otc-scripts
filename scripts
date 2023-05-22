@@ -1,0 +1,275 @@
+----DUDEK SCRIPTS-------
+------leczenie herowater------
+local hwId = 3158
+addIcon("HwMana&&Hp", {item={id= 3049, count=1}, text="Hw"}, macro(500, function()
+  if (hppercent() <= 90 or manapercent() <= 90) then
+    usewith(hwId, player) 
+  end
+end))
+-----leczenie soldierkami------
+local soldierId = 3028
+addIcon("SoldierMana&&Hp", {item={id= 3049, count=1}, text="Sold"}, macro(500,  function()
+  if (hppercent() <= 85 or manapercent() <= 85) then
+    usewith(soldierId, player) 
+  end
+end))
+----- leczenie ultikiem
+local ultik = 3093
+addIcon("Ultik", {item={id= 3049, count=1}, text="Ultik"}, macro(500, function()
+  if (hppercent() <=85 or manapercent() <=85) then  
+    usewith(ultik, player)
+  end
+end))
+-------leczenie specialkami-------
+local specialId = 9537
+addIcon("SpMana&&Hp", {item={id= 3049, count=1}, text="Spec"}, macro(500, function()
+  if (hppercent() <= 80 or manapercent() <= 80) then
+    usewith(specialId, player) 
+  end
+end))
+------regeneration spell--------
+local regeSpell = "regeneration"
+addIcon("regen", {item={id= 3049, count=1}, text="Regen"}, macro(250, function()
+  if(hppercent() <= 90) then
+    say(regeSpell)
+    end
+end))
+-----2 targety----
+UI.Label("TARGETY");
+addIcon("PVPSPELL", {item={id= 3049, count=1}, text="PVP"}, macro(250,  function()
+  if not g_game.isAttacking() then return end
+  say(storage.spell1)
+  say(storage.spell2)
+end))
+addTextEdit("spell1", storage.spell1 , function(widget, text) 
+  storage.spell1 = text
+end)
+addTextEdit("spell2", storage.spell2 , function(widget, text) 
+  storage.spell2 = text
+end)
+----target exp - aoe
+UI.Label("EXP");
+addIcon("PVESPELL", {item={id= 3049, count=1}, text="PVE"}, macro(250,  function()
+  local distance = 2
+  local mobsAmount = 2
+  local specAmount = 0
+  for i,mob in ipairs(getSpectators()) do
+  if not g_game.isAttacking() then return end
+  if getDistanceBetween(player:getPosition(), mob:getPosition())   <= distance and mob:isMonster() then
+    specAmount = specAmount + 1
+end
+end
+if (specAmount >= mobsAmount) then    
+  say(storage.spell3)
+  
+else
+  say(storage.spell4)
+  say(storage.spell5)
+end
+end))
+addTextEdit("spell3", storage.spell3 , function(widget, text) 
+  storage.spell3 = text
+end)
+addTextEdit("spell4", storage.spell4 , function(widget, text) 
+  storage.spell4 = text
+end)
+addTextEdit("spell5", storage.spell5 , function(widget, text) 
+  storage.spell5 = text
+end)
+-----buff akurat dla minato nw czy nie bedzie trzeba zmienic cd na innych charach-----
+addIcon("buff", {item={id= 3049, count=1}, text="Buff"}, macro(250, function()
+  say("shakujo")
+  delay(47000)
+end))
+----Niesmiertelka-----
+local belowHp = 40  
+local specialSpell = "Katon no Fumenu"
+addIcon("immortalka", {item={id= 3049, count=1}, text="Immo"}, macro(100, function()
+  local hpp = hppercent() 
+  if hpp <= belowHp then
+    say(specialSpell)
+  end
+end))
+------palenie many------
+local mlvl = 'chakra down'
+addIcon("Palenie many", {item={id= 3049, count=1}, text="Mlvl"}, macro(250, function()
+  if (manapercent() == 100) then
+    say(mlvl)
+  end
+end))
+------kupowanie soldier pilli------
+function itemAmount(id)
+  return player:getItemsCount(id)
+end
+local ex = 1000 
+addIcon("buy soldier", {item={id= 3049, count=1}, text="Bsp"}, macro(500, function()
+ if itemAmount(3028) <= 100 and itemAmount(3043) >= 2 then 
+    say("!buy soldier pills")
+    delay(ex)
+  end
+end))
+-----kupowanie special pilli-------
+addIcon("buy special", {item={id= 3049, count=1}, text="Bspp"}, macro(500, function()
+  if itemAmount(9537) <= 100 and itemAmount(3043) >= 2 then
+    say("!buy special pills")
+    delay(ex)
+   end
+end))
+--kupowanie blessa
+ if player:getBlessings() == 0 then
+    say("!bless")
+    schedule(2000, function()
+        if player:getBlessings() == 0 then
+            error("!! Blessings not bought !!")
+        end
+    end)
+end
+----zamiana pienionszkuw-------
+local moneyIds = {3031, 3035,3043} -- gc>>pc>>cc
+addIcon("Zamianakeszu", {item={id= 3049, count=1}, text="Exch"}, macro(1000, function()
+  local containers = g_game.getContainers()
+  for index, container in pairs(containers) do
+    if not container.lootContainer then 
+      for i, item in ipairs(container:getItems()) do
+        if item:getCount() == 100 then
+          for m, moneyId in ipairs(moneyIds) do
+            if item:getId() == moneyId then
+              return g_game.use(item)            
+            end
+          end
+        end
+      end
+    end
+  end
+end))
+-----Podnoszenie itemkuw z podlogii------
+local sItems = {943, 6551, 954, 945, 9615, 944, 940, 5944, 3102, 6550, 3994, 6097}
+addIcon("Collect", {item={id= 3049, count=1}, text="Collect"}, macro(100, "Podnoszenie itemów", function()
+  for _, tile in ipairs(g_map.getTiles(posz())) do
+    if getDistanceBetween(pos(), tile:getPosition()) <= 7 then
+    local things = tile:getThings()
+        for _, item in pairs(things) do
+            if table.find(sItems, item:getId()) then
+                g_game.move(item, {x = 65535, y=SlotBack, z=0}, item:getCount())
+                delay(200)
+                -- CaveBot.delay(800)
+            return
+        end
+      end
+    end
+  end
+end))
+-----follow-----
+followName = "autofollow"
+if not storage[followName] then storage[followName] = { player = 'name'} end
+UI.Separator()
+UI.Label("Auto Follow")
+followTE = UI.TextEdit(storage[followName].player or "name", function(widget, newText)
+    storage[followName].player = newText
+end)
+UI.Label("Walk Delay")
+UI.TextEdit(storage.delayf or "100", function(widget, newText)
+    storage.delayf = newText
+end)
+local toFollowPos = {}
+local followChange = macro(500, "Follow Change", function() end)
+local followMacro = macro(20, "Follow", function()
+    local target = getCreatureByName(storage[followName].player)
+    if target then
+        local tpos = target:getPosition()
+        toFollowPos[tpos.z] = tpos
+    end
+    if player:isWalking() then
+        return
+    end
+    local p = toFollowPos[posz()]
+    if not p then
+        return
+    end
+
+    if target then
+      autoWalk(p, 20, {ignoreNonPathable=true, precision=1, marginMin=1, marginMax=1})
+    else
+      autoWalk(p, 20, {ignoreNonPathable=true, precision=0})
+    end
+    delay(tonumber(storage.delayf))
+end)
+UI.Separator()
+onPlayerPositionChange(function(newPos, oldPos)
+  if followChange:isOff() then return end
+  if (g_game.isFollowing()) then
+    tfollow = g_game.getFollowingCreature()
+
+    if tfollow then
+      if tfollow:getName() ~= storage[followName].player then
+        followTE:setText(tfollow:getName())
+        storage[followName].player = tfollow:getName()
+      end
+    end
+  end
+end)
+onCreaturePositionChange(function(creature, newPos, oldPos)
+    if creature:getName() == storage[followName].player and newPos then
+        toFollowPos[newPos.z] = newPos
+    end
+end)
+------pauzowanie targetingu/cavebota--------
+addIcon("StopCTIcon", {item={id= 3049, count=1}, text="STOP"}, macro(500, function(m) 
+  CaveBot.setOn()
+  TargetBot.setOn()
+  schedule(200, function() 
+      if m.isOff() then
+          CaveBot.setOff()
+          TargetBot.setOff()
+      end
+  end)
+end))
+
+
+
+macro(500, "usepp", function()
+use(3533)
+end)
+
+
+
+---Reattack
+local oldTarget
+addIcon("Re", {item={id= 3049, count=1}, text = "ReA"}, macro(400, "Hold Target", nil, function()
+  if g_game.isAttacking() then
+    oldTarget = g_game.getAttackingCreature()
+  end
+  if (oldTarget and oldTarget:getPosition()) then
+    if (not g_game.isAttacking() and getDistanceBetween(pos(), oldTarget:getPosition()) <= 8) then
+      if (oldTarget:getPosition().z == posz()) then
+        g_game.attack(oldTarget)
+      end
+    end
+  end
+end))
+
+
+
+local key = 11087
+local sItems = {4065, 4042}
+addIcon("skurkowacz", {item={id= 3049, count=1}, text="skurkowacz"}, macro(100, "Podnoszenie itemów", function()
+  for _, tile in ipairs(g_map.getTiles(posz())) do
+    if getDistanceBetween(pos(), tile:getPosition()) <= 7 then
+    local things = tile:getThings()
+        for _, item in pairs(things) do
+            if table.find(sItems, item:getId()) then
+           useWith(key, item)
+-- CaveBot.delay(1100)
+            return
+        end
+      end
+    end
+  end
+end))
+
+
+
+
+
+
+
