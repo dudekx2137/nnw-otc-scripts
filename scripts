@@ -76,20 +76,27 @@ end)
 addTextEdit("spell5", storage.spell5 , function(widget, text) 
   storage.spell5 = text
 end)
------buff akurat dla minato nw czy nie bedzie trzeba zmienic cd na innych charach-----
+-----buff-----
+storage.buffSpell = storage.buffSpell
 addIcon("buff", {item={id= 3049, count=1}, text="Buff"}, macro(250, function()
-  say("shakujo")
-  delay(47000)
+  say(storage.buffSpell)
+  delay(6000)
 end))
+addTextEdit("Buff Spell", storage.buffSpell , function(widget, text)
+  storage.buffSpell = text
+end)
 ----Niesmiertelka-----
-local belowHp = 40  
-local specialSpell = "Katon no Fumenu"
+local belowHp = 40
+storage.immortalSpell = storage.immortalSpell
 addIcon("immortalka", {item={id= 3049, count=1}, text="Immo"}, macro(100, function()
   local hpp = hppercent() 
   if hpp <= belowHp then
-    say(specialSpell)
+    say(storage.immortalSpell)
   end
 end))
+addTextEdit("Immortal Spell", storage.immortalSpell , function(widget, text)
+  storage.immortalSpell = text
+end)
 ------palenie many------
 local mlvl = 'chakra down'
 addIcon("Palenie many", {item={id= 3049, count=1}, text="Mlvl"}, macro(250, function()
