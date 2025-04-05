@@ -77,6 +77,7 @@ addTextEdit("spell5", storage.spell5 , function(widget, text)
   storage.spell5 = text
 end)
 -----buff-----
+UI.Label("BUFF");
 storage.buffSpell = storage.buffSpell
 addIcon("buff", {item={id= 3049, count=1}, text="Buff"}, macro(250, function()
   say(storage.buffSpell)
@@ -86,6 +87,7 @@ addTextEdit("Buff Spell", storage.buffSpell , function(widget, text)
   storage.buffSpell = text
 end)
 ----Niesmiertelka-----
+UI.Label("IMMO");
 local belowHp = 40
 storage.immortalSpell = storage.immortalSpell
 addIcon("immortalka", {item={id= 3049, count=1}, text="Immo"}, macro(100, function()
