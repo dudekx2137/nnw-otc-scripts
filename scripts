@@ -235,9 +235,9 @@ addIcon("StopCTIcon", {item={id= 3049, count=1}, text="STOP"}, macro(500, functi
 end))
 
 
-------klikacz itemu--------
+
 macro(500, "usepp", function()
-use(3533)
+use(9058)
 end)
 
 
@@ -258,7 +258,7 @@ addIcon("Re", {item={id= 3049, count=1}, text = "ReA"}, macro(400, "Hold Target"
 end))
 
 
--------skurkowacz
+
 local key = 11087
 local sItems = {4065, 4042}
 addIcon("skurkowacz", {item={id= 3049, count=1}, text="skurkowacz"}, macro(100, "Podnoszenie itemów", function()
@@ -277,7 +277,7 @@ addIcon("skurkowacz", {item={id= 3049, count=1}, text="skurkowacz"}, macro(100, 
 end))
 
 
-----------alarm gdy brak targetu ---------------
+
 macro(1000, " HP %", function()
   for _, creature in ipairs(getSpectators()) do
     local hp = creature:getHealthPercent()
@@ -287,22 +287,20 @@ end)
 
 addIcon("TargetAlarm",{item = {id = 3049, count=1},text="Target Alarm"},macro(500, "Target Alarm", function()
   if not g_game.isAttacking() then
-    playSound("/sounds/alarm.ogg")
+    playSound("/sounds/magnum.ogg")
       delay(1000)
   end
 end))
 
---------alarm, gdy cwel na ekranie----------
-addIcon("CwelNaEkranie",{item={id=3049, count=1,text="cwele na ekranie"},macro(500, "Alarm - Gracz na ekranie", function()
+
+addIcon("CwelNaEkranie",{item={id=3049, count=1},text="cwele na ekranie"},macro(500, "cwel na ekranie", function()
   for _, creature in ipairs(getSpectators()) do
     if creature:isPlayer() and creature:getName() ~= name() then
       playSound("/sounds/magnum.ogg")
-      modules.game_textmessage.displayGameMessage("⚠ Gracz: " .. creature:getName() .. " na ekranie!", MESSAGE_STATUS_WARNING)
+      modules.game_textmessage.displayGameMessage("Gracz: " .. creature:getName() .. " na ekranie!",   MESSAGE_INFO_DESCR)
       return 
     end
   end
 end))
-
-
 
 
