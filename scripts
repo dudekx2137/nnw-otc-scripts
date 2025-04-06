@@ -235,9 +235,9 @@ addIcon("StopCTIcon", {item={id= 3049, count=1}, text="STOP"}, macro(500, functi
 end))
 
 
-
+---useitem
 macro(500, "usepp", function()
-use(9058)
+use(3533)
 end)
 
 
@@ -258,7 +258,7 @@ addIcon("Re", {item={id= 3049, count=1}, text = "ReA"}, macro(400, "Hold Target"
 end))
 
 
-
+----skurowacz
 local key = 11087
 local sItems = {4065, 4042}
 addIcon("skurkowacz", {item={id= 3049, count=1}, text="skurkowacz"}, macro(100, "Podnoszenie itemów", function()
@@ -277,30 +277,52 @@ addIcon("skurkowacz", {item={id= 3049, count=1}, text="skurkowacz"}, macro(100, 
 end))
 
 
-
+----hp% mobow
 macro(1000, " HP %", function()
   for _, creature in ipairs(getSpectators()) do
     local hp = creature:getHealthPercent()
     creature:setText(string.format("%d%%", hp), hp > 50 and "green" or (hp > 25 and "orange" or "red"))
   end
 end)
-
+----alarm target
 addIcon("TargetAlarm",{item = {id = 3049, count=1},text="Target Alarm"},macro(500, "Target Alarm", function()
   if not g_game.isAttacking() then
-    playSound("/sounds/magnum.ogg")
+    playSound("/sounds/alarm.ogg")
       delay(1000)
   end
 end))
 
-
-addIcon("CwelNaEkranie",{item={id=3049, count=1},text="cwele na ekranie"},macro(500, "cwel na ekranie", function()
+---alarm gracze-----
+addIcon("CwelNaEkranie",{item={id=3049, count=1},text="cwele na ekranie"},macro(500, "Alarm - Gracz na ekranie", function()
   for _, creature in ipairs(getSpectators()) do
     if creature:isPlayer() and creature:getName() ~= name() then
       playSound("/sounds/magnum.ogg")
-      modules.game_textmessage.displayGameMessage("Gracz: " .. creature:getName() .. " na ekranie!",   MESSAGE_INFO_DESCR)
+      modules.game_textmessage.displayGameMessage("⚠ Gracz: " .. creature:getName() .. " na ekranie!", MESSAGE_STATUS_WARNING)
       return 
     end
   end
 end))
+
+
+-----alarm zbieracz
+local itemIdToWatch = 9657
+local itemThreshold = 10
+
+macro(2500, "Item Alarm", function()
+  local count = 0
+  for _, container in pairs(g_game.getContainers()) do
+    for _, item in ipairs(container:getItems()) do
+      if item:getId() == itemIdToWatch then
+        count = count + item:getCount()
+      end
+    end
+  end
+  
+  if count >= itemThreshold then
+    playSound("/sounds/magnum.ogg")
+    modules.game_textmessage.displayGameMessage("Masz " .. count .. "x itemka!", MESSAGE_STATUS_WARNING)
+
+  end
+end)
 
 
