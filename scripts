@@ -325,4 +325,29 @@ macro(2500, "Item Alarm", function()
   end
 end)
 
+----autoparty
+local kurwiszony_do_party = {
+  "Anakonda",
+  "Nahill",
+}
+
+local function contains(table, val)
+  for i = 1, #table do
+    if table[i]:lower() == val:lower() then
+      return true
+    end
+  end
+  return false
+end
+
+macro(2000, "Auto Party Invite", function()
+  for _, spec in ipairs(getSpectators()) do
+    if contains(kurwiszony_do_party, spec:getName()) and not spec:isPartyMember() then
+      g_game.partyInvite(spec:getId()) 
+      modules.game_textmessage.displayGameMessage("➕ Zaproszono do party: " .. spec:getName(), MESSAGE_STATUS_WARNING)
+    end
+  end
+end)
+
+
 
