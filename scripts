@@ -1,4 +1,6 @@
 ----DUDEK SCRIPTS-------
+
+
 ------leczenie herowater------
 local hwId = 3158
 addIcon("HwMana&&Hp", {item={id= 3049, count=1}, text="Hw"}, macro(500, function()
@@ -88,7 +90,7 @@ addTextEdit("Buff Spell", storage.buffSpell , function(widget, text)
 end)
 ----Niesmiertelka-----
 UI.Label("IMMO");
-local belowHp = 40
+local belowHp = 50
 storage.immortalSpell = storage.immortalSpell
 addIcon("immortalka", {item={id= 3049, count=1}, text="Immo"}, macro(100, function()
   local hpp = hppercent() 
@@ -119,7 +121,7 @@ addIcon("buy soldier", {item={id= 3049, count=1}, text="Bsp"}, macro(500, functi
 end))
 -----kupowanie special pilli-------
 addIcon("buy special", {item={id= 3049, count=1}, text="Bspp"}, macro(500, function()
-  if itemAmount(9537) <= 100 and itemAmount(3043) >= 2 then
+  if itemAmount(9537) <= 100 then
     say("!buy special pills")
     delay(ex)
    end
@@ -152,7 +154,7 @@ addIcon("Zamianakeszu", {item={id= 3049, count=1}, text="Exch"}, macro(1000, fun
   end
 end))
 -----Podnoszenie itemkuw z podlogii------
-local sItems = {943, 6551, 954, 945, 9615, 944, 940, 5944, 3102, 6550, 3994, 6097,12642}
+local sItems = {943, 6551, 954, 945, 9615, 944, 940, 5944, 3102, 6550, 6097,12642,  12460,12461,12464,12462,12463}
 addIcon("Collect", {item={id= 3049, count=1}, text="Collect"}, macro(100, "Podnoszenie itemów", function()
   for _, tile in ipairs(g_map.getTiles(posz())) do
     if getDistanceBetween(pos(), tile:getPosition()) <= 7 then
@@ -237,7 +239,7 @@ end))
 
 ---useitem
 macro(500, "usepp", function()
-use(3533)
+use(9058)
 end)
 
 
@@ -257,26 +259,38 @@ addIcon("Re", {item={id= 3049, count=1}, text = "ReA"}, macro(400, "Hold Target"
   end
 end))
 
+--skurr
+storage.skury_itemy = storage.skury_itemy or "4065,4042,4286,3994,4069"
+storage.skury_tool = storage.skury_tool or "11087"
 
-----skurowacz
-local key = 11087
-local sItems = {4065, 4042}
-addIcon("skurkowacz", {item={id= 3049, count=1}, text="skurkowacz"}, macro(100, "Podnoszenie itemów", function()
+UI.Label("ID deadów");
+addTextEdit("skuryItemki", storage.skury_itemy, function(widget, text)
+  storage.skury_itemy = text
+end)
+UI.Label("ID skurowacza(127/11087");
+addTextEdit("skuryToolID", storage.skury_tool, function(widget, text)
+  storage.skury_tool = text
+end)
+macro(100, "Auto Skórowanie", function()
+  local tool = tonumber(storage.skury_tool)
+  if not tool then return end
+
+  local sItems = {}
+  for id in storage.skury_itemy:gmatch("%d+") do
+    table.insert(sItems, tonumber(id))
+  end
+
   for _, tile in ipairs(g_map.getTiles(posz())) do
     if getDistanceBetween(pos(), tile:getPosition()) <= 7 then
-    local things = tile:getThings()
-        for _, item in pairs(things) do
-            if table.find(sItems, item:getId()) then
-           useWith(key, item)
--- CaveBot.delay(1100)
-            return
+      for _, item in ipairs(tile:getItems()) do
+        if table.find(sItems, item:getId()) then
+          useWith(tool, item)
+          return
         end
       end
     end
   end
-end))
-
-
+end)
 ----hp% mobow
 macro(1000, " HP %", function()
   for _, creature in ipairs(getSpectators()) do
@@ -297,7 +311,7 @@ addIcon("CwelNaEkranie",{item={id=3049, count=1},text="cwele na ekranie"},macro(
   for _, creature in ipairs(getSpectators()) do
     if creature:isPlayer() and creature:getName() ~= name() then
       playSound("/sounds/magnum.ogg")
-      modules.game_textmessage.displayGameMessage("⚠ Gracz: " .. creature:getName() .. " na ekranie!", MESSAGE_STATUS_WARNING)
+      modules.game_textmessage.displayGameMessage("? Gracz: " .. creature:getName() .. " na ekranie!", MESSAGE_STATUS_WARNING)
       return 
     end
   end
@@ -305,8 +319,8 @@ end))
 
 
 -----alarm zbieracz
-local itemIdToWatch = 9657
-local itemThreshold = 10
+local itemIdToWatch =  12460
+local itemThreshold = 100
 
 macro(2500, "Item Alarm", function()
   local count = 0
@@ -325,7 +339,8 @@ macro(2500, "Item Alarm", function()
   end
 end)
 
-----autoparty
+
+---autoparty
 local kurwiszony_do_party = {
   "Anakonda",
   "Nahill",
@@ -343,11 +358,36 @@ end
 macro(2000, "Auto Party Invite", function()
   for _, spec in ipairs(getSpectators()) do
     if contains(kurwiszony_do_party, spec:getName()) and not spec:isPartyMember() then
-      g_game.partyInvite(spec:getId()) 
-      modules.game_textmessage.displayGameMessage("➕ Zaproszono do party: " .. spec:getName(), MESSAGE_STATUS_WARNING)
+      g_game.partyInvite(spec:getId())
+      modules.game_textmessage.displayGameMessage("? Zaproszono do party: " .. spec:getName(), MESSAGE_STATUS_WARNING)
     end
   end
 end)
+
+----wyrzutnia hajsu
+local itemId = 3031
+local positions = {
+  {x = 1, y = 0}, {x = -1, y = 0}, {x = 0, y = 1}, {x = 0, y = -1},
+  {x = 1, y = 1}, {x = 1, y = -1}, {x = -1, y = 1}, {x = -1, y = -1}
+}
+macro(1000, "Wyrzutnia hajsu", function()
+  local playerPos = pos()
+  for _, offset in ipairs(positions) do
+    local dropPos = {x = playerPos.x + offset.x, y = playerPos.y + offset.y, z = playerPos.z}
+    if findItem(itemId) then
+      g_game.move(findItem(itemId), dropPos, 1)
+      delay(200)
+    end
+  end
+end)
+
+
+
+
+
+
+
+
 
 
 
