@@ -1,5 +1,6 @@
 ----DUDEK SCRIPTS-------
-
+-- --skrypcioszki
+-- setDefaultTab("Skrypcioszki")
 
 ------leczenie herowater------
 local hwId = 3158
@@ -49,6 +50,7 @@ end)
 addTextEdit("spell2", storage.spell2 , function(widget, text) 
   storage.spell2 = text
 end)
+UI.Separator()
 ----target exp - aoe
 UI.Label("EXP");
 addIcon("PVESPELL", {item={id= 3049, count=1}, text="PVE"}, macro(250,  function()
@@ -78,6 +80,7 @@ end)
 addTextEdit("spell5", storage.spell5 , function(widget, text) 
   storage.spell5 = text
 end)
+UI.Separator()
 -----buff-----
 UI.Label("BUFF");
 storage.buffSpell = storage.buffSpell
@@ -101,6 +104,7 @@ end))
 addTextEdit("Immortal Spell", storage.immortalSpell , function(widget, text)
   storage.immortalSpell = text
 end)
+UI.Separator()
 ------palenie many------
 local mlvl = 'chakra down'
 addIcon("Palenie many", {item={id= 3049, count=1}, text="Mlvl"}, macro(250, function()
@@ -154,8 +158,17 @@ addIcon("Zamianakeszu", {item={id= 3049, count=1}, text="Exch"}, macro(1000, fun
   end
 end))
 -----Podnoszenie itemkuw z podlogii------
-local sItems = {943, 6551, 954, 945, 9615, 944, 940, 5944, 3102, 6550, 6097,12642,  12460,12461,12464,12462,12463}
-addIcon("Collect", {item={id= 3049, count=1}, text="Collect"}, macro(100, "Podnoszenie itemów", function()
+UI.Label("ID itemow do podnoszenia")
+storage.items = storage.items or "943,6551,954,945,9615,944,940,5944,3102,6550,6097,12642,12460,12461,12464,12462,12463";
+addTextEdit("items", storage.items, function(widget, text)
+  storage.items = text
+end)
+addIcon("Collect", {item={id= 3049, count=1}, text="Collect"}, macro(100, "Podnoszenie itemow", function()
+  
+  local sItems = {}
+  for id in storage.items:gmatch("%d+") do
+    table.insert(sItems, tonumber(id))
+  end
   for _, tile in ipairs(g_map.getTiles(posz())) do
     if getDistanceBetween(pos(), tile:getPosition()) <= 7 then
     local things = tile:getThings()
@@ -163,118 +176,27 @@ addIcon("Collect", {item={id= 3049, count=1}, text="Collect"}, macro(100, "Podno
             if table.find(sItems, item:getId()) then
                 g_game.move(item, {x = 65535, y=SlotBack, z=0}, item:getCount())
                 delay(200)
-                -- CaveBot.delay(800)
             return
         end
       end
     end
   end
 end))
------follow-----
-followName = "autofollow"
-if not storage[followName] then storage[followName] = { player = 'name'} end
-UI.Separator()
-UI.Label("Auto Follow")
-followTE = UI.TextEdit(storage[followName].player or "name", function(widget, newText)
-    storage[followName].player = newText
-end)
-UI.Label("Walk Delay")
-UI.TextEdit(storage.delayf or "100", function(widget, newText)
-    storage.delayf = newText
-end)
-local toFollowPos = {}
-local followChange = macro(500, "Follow Change", function() end)
-local followMacro = macro(20, "Follow", function()
-    local target = getCreatureByName(storage[followName].player)
-    if target then
-        local tpos = target:getPosition()
-        toFollowPos[tpos.z] = tpos
-    end
-    if player:isWalking() then
-        return
-    end
-    local p = toFollowPos[posz()]
-    if not p then
-        return
-    end
-
-    if target then
-      autoWalk(p, 20, {ignoreNonPathable=true, precision=1, marginMin=1, marginMax=1})
-    else
-      autoWalk(p, 20, {ignoreNonPathable=true, precision=0})
-    end
-    delay(tonumber(storage.delayf))
-end)
-UI.Separator()
-onPlayerPositionChange(function(newPos, oldPos)
-  if followChange:isOff() then return end
-  if (g_game.isFollowing()) then
-    tfollow = g_game.getFollowingCreature()
-
-    if tfollow then
-      if tfollow:getName() ~= storage[followName].player then
-        followTE:setText(tfollow:getName())
-        storage[followName].player = tfollow:getName()
-      end
-    end
-  end
-end)
-onCreaturePositionChange(function(creature, newPos, oldPos)
-    if creature:getName() == storage[followName].player and newPos then
-        toFollowPos[newPos.z] = newPos
-    end
-end)
-------pauzowanie targetingu/cavebota--------
-addIcon("StopCTIcon", {item={id= 3049, count=1}, text="STOP"}, macro(500, function(m) 
-  CaveBot.setOn()
-  TargetBot.setOn()
-  schedule(200, function() 
-      if m.isOff() then
-          CaveBot.setOff()
-          TargetBot.setOff()
-      end
-  end)
-end))
-
-
----useitem
-macro(500, "usepp", function()
-use(9058)
-end)
-
-
-
----Reattack
-local oldTarget
-addIcon("Re", {item={id= 3049, count=1}, text = "ReA"}, macro(400, "Hold Target", nil, function()
-  if g_game.isAttacking() then
-    oldTarget = g_game.getAttackingCreature()
-  end
-  if (oldTarget and oldTarget:getPosition()) then
-    if (not g_game.isAttacking() and getDistanceBetween(pos(), oldTarget:getPosition()) <= 8) then
-      if (oldTarget:getPosition().z == posz()) then
-        g_game.attack(oldTarget)
-      end
-    end
-  end
-end))
-
 --skurr
 storage.skury_itemy = storage.skury_itemy or "4065,4042,4286,3994,4069"
 storage.skury_tool = storage.skury_tool or "11087"
 
-UI.Label("ID deadów");
+UI.Label("ID deadow");
 addTextEdit("skuryItemki", storage.skury_itemy, function(widget, text)
   storage.skury_itemy = text
 end)
-UI.Label("ID skurowacza(127/11087");
+UI.Label("ID skurowacza(127/11087)");
 addTextEdit("skuryToolID", storage.skury_tool, function(widget, text)
   storage.skury_tool = text
 end)
-macro(100, "Auto Skórowanie", function()
+addIcon("Skur", {item={id = 3049, count=1}, text = "skur"},macro(100, "Auto Skurowanie", function()
   local tool = tonumber(storage.skury_tool)
   if not tool then return end
-
   local sItems = {}
   for id in storage.skury_itemy:gmatch("%d+") do
     table.insert(sItems, tonumber(id))
@@ -290,7 +212,47 @@ macro(100, "Auto Skórowanie", function()
       end
     end
   end
-end)
+end))
+---useitem
+UI.Label("ID itema do uzycia:")
+    storage.cItem = storage.cItem or '9058'
+    addTextEdit("skuryItemki", storage.cItem, function(widget, text)
+        storage.cItem = text
+    end)
+    macro(500, "Useitem", function()
+        local itemId = tonumber(storage.cItem)
+        if itemId then
+            use(itemId)
+        end
+    end)
+
+UI.Separator()
+
+------pauzowanie targetingu/cavebota--------
+addIcon("StopCTIcon", {item={id= 3049, count=1}, text="STOP"}, macro(500, function(m) 
+  CaveBot.setOn()
+  TargetBot.setOn()
+  schedule(200, function() 
+      if m.isOff() then
+          CaveBot.setOff()
+          TargetBot.setOff()
+      end
+  end)
+end))
+---Reattack
+local oldTarget
+addIcon("Re", {item={id= 3049, count=1}, text = "ReA"}, macro(400, "Hold Target", nil, function()
+  if g_game.isAttacking() then
+    oldTarget = g_game.getAttackingCreature()
+  end
+  if (oldTarget and oldTarget:getPosition()) then
+    if (not g_game.isAttacking() and getDistanceBetween(pos(), oldTarget:getPosition()) <= 8) then
+      if (oldTarget:getPosition().z == posz()) then
+        g_game.attack(oldTarget)
+      end
+    end
+  end
+end))
 ----hp% mobow
 macro(1000, " HP %", function()
   for _, creature in ipairs(getSpectators()) do
@@ -302,7 +264,7 @@ end)
 addIcon("TargetAlarm",{item = {id = 3049, count=1},text="Target Alarm"},macro(500, "Target Alarm", function()
   if not g_game.isAttacking() then
     playSound("/sounds/alarm.ogg")
-      delay(1000)
+      delay(5000)
   end
 end))
 
@@ -381,6 +343,75 @@ macro(1000, "Wyrzutnia hajsu", function()
   end
 end)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----follow-----ten skrypt ma byc last
+followName = "autofollow"
+if not storage[followName] then storage[followName] = { player = 'name'} end
+UI.Separator()
+UI.Label("Auto Follow")
+followTE = UI.TextEdit(storage[followName].player or "name", function(widget, newText)
+    storage[followName].player = newText
+end)
+UI.Label("Walk Delay")
+UI.TextEdit(storage.delayf or "100", function(widget, newText)
+    storage.delayf = newText
+end)
+local toFollowPos = {}
+local followChange = macro(500, "Follow Change", function() end)
+local followMacro = macro(20, "Follow", function()
+    local target = getCreatureByName(storage[followName].player)
+    if target then
+        local tpos = target:getPosition()
+        toFollowPos[tpos.z] = tpos
+    end
+    if player:isWalking() then
+        return
+    end
+    local p = toFollowPos[posz()]
+    if not p then
+        return
+    end
+
+    if target then
+      autoWalk(p, 20, {ignoreNonPathable=true, precision=1, marginMin=1, marginMax=1})
+    else
+      autoWalk(p, 20, {ignoreNonPathable=true, precision=0})
+    end
+    delay(tonumber(storage.delayf))
+end)
+UI.Separator()
+onPlayerPositionChange(function(newPos, oldPos)
+  if followChange:isOff() then return end
+  if (g_game.isFollowing()) then
+    tfollow = g_game.getFollowingCreature()
+
+    if tfollow then
+      if tfollow:getName() ~= storage[followName].player then
+        followTE:setText(tfollow:getName())
+        storage[followName].player = tfollow:getName()
+      end
+    end
+  end
+end)
+onCreaturePositionChange(function(creature, newPos, oldPos)
+    if creature:getName() == storage[followName].player and newPos then
+        toFollowPos[newPos.z] = newPos
+    end
+end)
 
 
 
