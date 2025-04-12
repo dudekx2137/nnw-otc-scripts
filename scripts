@@ -1,45 +1,44 @@
 ----DUDEK SCRIPTS-------
--- --skrypcioszki
 -- setDefaultTab("Skrypcioszki")
 
 ------leczenie herowater------
 local hwId = 3158
-addIcon("HwMana&&Hp", {item={id= 3049, count=1}, text="Hw"}, macro(500, function()
+addIcon("HwMana&&Hp", {item={id= 11676, count=1}, text="Hw"}, macro(500, function()
   if (hppercent() <= 90 or manapercent() <= 90) then
     usewith(hwId, player) 
   end
 end))
 -----leczenie soldierkami------
 local soldierId = 3028
-addIcon("SoldierMana&&Hp", {item={id= 3049, count=1}, text="Sold"}, macro(500,  function()
+addIcon("SoldierMana&&Hp", {item={id= 11676, count=1}, text="Sold"}, macro(500,  function()
   if (hppercent() <= 85 or manapercent() <= 85) then
     usewith(soldierId, player) 
   end
 end))
 ----- leczenie ultikiem
 local ultik = 3093
-addIcon("Ultik", {item={id= 3049, count=1}, text="Ultik"}, macro(500, function()
+addIcon("Ultik", {item={id= 11676, count=1}, text="Ultik"}, macro(500, function()
   if (hppercent() <=85 or manapercent() <=85) then  
     usewith(ultik, player)
   end
 end))
 -------leczenie specialkami-------
 local specialId = 9537
-addIcon("SpMana&&Hp", {item={id= 3049, count=1}, text="Spec"}, macro(500, function()
+addIcon("SpMana&&Hp", {item={id= 11676, count=1}, text="Spec"}, macro(500, function()
   if (hppercent() <= 80 or manapercent() <= 80) then
     usewith(specialId, player) 
   end
 end))
 ------regeneration spell--------
 local regeSpell = "regeneration"
-addIcon("regen", {item={id= 3049, count=1}, text="Regen"}, macro(250, function()
+addIcon("regen", {item={id= 11676, count=1}, text="Regen"}, macro(250, function()
   if(hppercent() <= 90) then
     say(regeSpell)
     end
 end))
 -----2 targety----
 UI.Label("TARGETY");
-addIcon("PVPSPELL", {item={id= 3049, count=1}, text="PVP"}, macro(250,  function()
+addIcon("PVPSPELL", {item={id= 11676, count=1}, text="PVP"}, macro(250,  function()
   if not g_game.isAttacking() then return end
   say(storage.spell1)
   say(storage.spell2)
@@ -50,10 +49,10 @@ end)
 addTextEdit("spell2", storage.spell2 , function(widget, text) 
   storage.spell2 = text
 end)
-UI.Separator()
+
 ----target exp - aoe
 UI.Label("EXP");
-addIcon("PVESPELL", {item={id= 3049, count=1}, text="PVE"}, macro(250,  function()
+addIcon("PVESPELL", {item={id= 11676, count=1}, text="PVE"}, macro(250,  function()
   local distance = 2
   local mobsAmount = 3
   local specAmount = 0
@@ -84,7 +83,7 @@ UI.Separator()
 -----buff-----
 UI.Label("BUFF");
 storage.buffSpell = storage.buffSpell
-addIcon("buff", {item={id= 3049, count=1}, text="Buff"}, macro(250, function()
+addIcon("buff", {item={id= 11676, count=1}, text="Buff"}, macro(250, function()
   say(storage.buffSpell)
   delay(6000)
 end))
@@ -95,7 +94,7 @@ end)
 UI.Label("IMMO");
 local belowHp = 50
 storage.immortalSpell = storage.immortalSpell
-addIcon("immortalka", {item={id= 3049, count=1}, text="Immo"}, macro(100, function()
+addIcon("immortalka", {item={id= 11676, count=1}, text="Immo"}, macro(100, function()
   local hpp = hppercent() 
   if hpp <= belowHp then
     say(storage.immortalSpell)
@@ -107,7 +106,7 @@ end)
 UI.Separator()
 ------palenie many------
 local mlvl = 'chakra down'
-addIcon("Palenie many", {item={id= 3049, count=1}, text="Mlvl"}, macro(250, function()
+addIcon("Palenie many", {item={id= 11676, count=1}, text="Mlvl"}, macro(250, function()
   if (manapercent() == 100) then
     say(mlvl)
   end
@@ -117,14 +116,14 @@ function itemAmount(id)
   return player:getItemsCount(id)
 end
 local ex = 1000 
-addIcon("buy soldier", {item={id= 3049, count=1}, text="Bsp"}, macro(500, function()
+addIcon("buy soldier", {item={id= 11676, count=1}, text="Bsp"}, macro(500, function()
  if itemAmount(3028) <= 100 and itemAmount(3043) >= 2 then 
     say("!buy soldier pills")
     delay(ex)
   end
 end))
 -----kupowanie special pilli-------
-addIcon("buy special", {item={id= 3049, count=1}, text="Bspp"}, macro(500, function()
+addIcon("buy special", {item={id= 11676, count=1}, text="Bspp"}, macro(500, function()
   if itemAmount(9537) <= 100 then
     say("!buy special pills")
     delay(ex)
@@ -141,7 +140,7 @@ end))
 end
 ----zamiana pienionszkuw-------
 local moneyIds = {3031, 3035,3043} -- gc>>pc>>cc
-addIcon("Zamianakeszu", {item={id= 3049, count=1}, text="Exch"}, macro(1000, function()
+addIcon("Zamianakeszu", {item={id= 11676, count=1}, text="Exch"}, macro(1000, function()
   local containers = g_game.getContainers()
   for index, container in pairs(containers) do
     if not container.lootContainer then 
@@ -158,43 +157,46 @@ addIcon("Zamianakeszu", {item={id= 3049, count=1}, text="Exch"}, macro(1000, fun
   end
 end))
 -----Podnoszenie itemkuw z podlogii------
-UI.Label("ID itemow do podnoszenia")
-storage.items = storage.items or "943,6551,954,945,9615,944,940,5944,3102,6550,6097,12642,12460,12461,12464,12462,12463";
-addTextEdit("items", storage.items, function(widget, text)
-  storage.items = text
-end)
-addIcon("Collect", {item={id= 3049, count=1}, text="Collect"}, macro(100, "Podnoszenie itemow", function()
+UI.Label("----CollectItems----")
+UI.Label("ID itemow do podnoszenia:")
+  storage.items = storage.items or "943,6551,954,945,9615,944,940,5944,3102,6550,6097,12642,12460,12461,12464,12462,12463";
+  addTextEdit("items", storage.items, function(widget, text)
+    storage.items = text
+  end):setMultiline(true)
   
-  local sItems = {}
-  for id in storage.items:gmatch("%d+") do
-    table.insert(sItems, tonumber(id))
-  end
-  for _, tile in ipairs(g_map.getTiles(posz())) do
-    if getDistanceBetween(pos(), tile:getPosition()) <= 7 then
-    local things = tile:getThings()
+  addIcon("Collect", {item={id= 11676, count=1}, text="Collect"}, macro(100, "Podnoszenie itemow", function()
+  
+    local sItems = {}
+    for id in storage.items:gmatch("%d+") do
+      table.insert(sItems, tonumber(id))
+    end
+    for _, tile in ipairs(g_map.getTiles(posz())) do
+      if getDistanceBetween(pos(), tile:getPosition()) <= 7 then
+      local things = tile:getThings()
         for _, item in pairs(things) do
-            if table.find(sItems, item:getId()) then
-                g_game.move(item, {x = 65535, y=SlotBack, z=0}, item:getCount())
-                delay(200)
-            return
+          if table.find(sItems, item:getId()) then
+            g_game.move(item, {x = 65535, y=SlotBack, z=0}, item:getCount())
+            delay(200)
+          return
+          end
         end
       end
     end
-  end
-end))
+  end))
+UI.Label("----Skurowacz----")
 --skurr
 storage.skury_itemy = storage.skury_itemy or "4065,4042,4286,3994,4069"
 storage.skury_tool = storage.skury_tool or "11087"
 
-UI.Label("ID deadow");
+UI.Label("ID deadow:");
 addTextEdit("skuryItemki", storage.skury_itemy, function(widget, text)
   storage.skury_itemy = text
 end)
-UI.Label("ID skurowacza(127/11087)");
+UI.Label("ID skurowacza(127/11087):");
 addTextEdit("skuryToolID", storage.skury_tool, function(widget, text)
   storage.skury_tool = text
 end)
-addIcon("Skur", {item={id = 3049, count=1}, text = "skur"},macro(100, "Auto Skurowanie", function()
+addIcon("Skur", {item={id = 11676, count=1}, text = "skur"},macro(100, "Auto Skurowanie", function()
   local tool = tonumber(storage.skury_tool)
   if not tool then return end
   local sItems = {}
@@ -214,6 +216,7 @@ addIcon("Skur", {item={id = 3049, count=1}, text = "skur"},macro(100, "Auto Skur
   end
 end))
 ---useitem
+UI.Label("----UseItem----")
 UI.Label("ID itema do uzycia:")
     storage.cItem = storage.cItem or '9058'
     addTextEdit("skuryItemki", storage.cItem, function(widget, text)
@@ -225,23 +228,123 @@ UI.Label("ID itema do uzycia:")
             use(itemId)
         end
     end)
+UI.Label("----AutoParty----")
+UI.Label("Podaj nicki graczy do party:")
+---autoparty
+local kurwiszony_do_party = {}
 
+local function contains(table, val)
+  for i = 1, #table do
+    if table[i]:lower() == val:lower() then
+      return true
+    end
+  end
+  return false
+end
+local function updatePartyList(widget, text)
+  kurwiszony_do_party = {}
+  for name in text:gmatch("[^,]+") do
+    table.insert(kurwiszony_do_party, name:trim())
+  end
+end
+addTextEdit("PartyNames", table.concat(kurwiszony_do_party, ", "), function(widget, text)
+  updatePartyList(widget, text)
+end)
+macro(2000, "Auto Party Invite", function()
+  for _, spec in ipairs(getSpectators()) do
+    if contains(kurwiszony_do_party, spec:getName()) and not spec:isPartyMember() then
+      g_game.partyInvite(spec:getId())
+      modules.game_textmessage.displayGameMessage("? Zaproszono do party: " .. spec:getName(), MESSAGE_STATUS_WARNING)
+    end
+  end
+end)
+--alarm gdy uzbiera itemy
+UI.Label("----ItemAlarm----")
+local itemIdToWatch = 0
+local itemThreshold = 100
+
+local function updateItemId(widget, text)
+  itemIdToWatch = tonumber(text) or itemIdToWatch
+end
+
+local function updateItemThreshold(widget, text)
+  itemThreshold = tonumber(text) or itemThreshold
+end
+UI.Label("Podaj id itemu:")
+addTextEdit("ItemIdInput", tostring(itemIdToWatch), function(widget, text)
+  updateItemId(widget, text)
+end)
+
+UI.Label("Podaj ilosc do uzbierania:")
+addTextEdit("ItemThresholdInput", tostring(itemThreshold), function(widget, text)
+  updateItemThreshold(widget, text)
+end)
+
+addIcon("ItemAlarm", {item={id = 11676, count=1}, text="Item Alarm"},macro(2500, "Item Alarm", function()
+  local count = 0
+  for _, container in pairs(g_game.getContainers()) do
+    for _, item in ipairs(container:getItems()) do
+      if item:getId() == itemIdToWatch then
+        count = count + item:getCount()
+      end
+    end
+  end
+  
+  if count >= itemThreshold then
+    playSound("/sounds/magnum.ogg")
+    modules.game_textmessage.displayGameMessage("Masz " .. count .. "x itemka!", MESSAGE_STATUS_WARNING)
+  end
+end))
 UI.Separator()
 
 ------pauzowanie targetingu/cavebota--------
-addIcon("StopCTIcon", {item={id= 3049, count=1}, text="STOP"}, macro(500, function(m) 
-  CaveBot.setOn()
-  TargetBot.setOn()
-  schedule(200, function() 
-      if m.isOff() then
-          CaveBot.setOff()
-          TargetBot.setOff()
-      end
-  end)
-end))
+local function setIcon(widget)
+  widget.setOn(false)
+  widget:setHeight(15)
+  widget:setFont("verdana-11px-rounded")
+end
+
+local function getColor(macro)
+  return macro.isOn() and "green" or "red"
+end
+
+local function getStatus(macro)
+  return macro.isOn() and "ON" or "OFF"
+end
+
+local function toggle(macro)
+  if macro.isOn() then
+    macro.setOff()
+  else
+    macro.setOn()
+  end
+end
+
+local function setCaveBotBehavior(widget)
+  setIcon(widget)
+  widget:setWidth(90)
+  toggle(CaveBot)
+  widget:setColoredText({"CaveBot: ", "yellow", getStatus(CaveBot), getColor(CaveBot)})  
+end
+
+local function setTargetBotBehavior(widget) 
+  setIcon(widget)
+  widget:setWidth(90)
+  toggle(TargetBot)
+  widget:setColoredText({"TargetBot: ", "yellow", getStatus(TargetBot), getColor(TargetBot)})
+end
+
+addIcon("TargetBotIcon", {item=0, text="", movable=true}, function(widget, enabled)
+  setTargetBotBehavior(widget)
+end)
+
+addIcon("CaveBotIcon", {item=0, text="", movable=true}, function(widget, enabled)
+  setCaveBotBehavior(widget)
+end)
+
 ---Reattack
 local oldTarget
-addIcon("Re", {item={id= 3049, count=1}, text = "ReA"}, macro(400, "Hold Target", nil, function()
+addIcon("Re", {item={id= 11676, count=1}, text = "ReA"}, macro(400, "Hold Target", nil, function()
   if g_game.isAttacking() then
     oldTarget = g_game.getAttackingCreature()
   end
@@ -261,7 +364,7 @@ macro(1000, " HP %", function()
   end
 end)
 ----alarm target
-addIcon("TargetAlarm",{item = {id = 3049, count=1},text="Target Alarm"},macro(500, "Target Alarm", function()
+addIcon("TargetAlarm",{item = {id = 11676, count=1},text="Target Alarm"},macro(500, "Target Alarm", function()
   if not g_game.isAttacking() then
     playSound("/sounds/alarm.ogg")
       delay(5000)
@@ -269,65 +372,24 @@ addIcon("TargetAlarm",{item = {id = 3049, count=1},text="Target Alarm"},macro(50
 end))
 
 ---alarm gracze-----
-addIcon("CwelNaEkranie",{item={id=3049, count=1},text="cwele na ekranie"},macro(500, "Alarm - Gracz na ekranie", function()
+addIcon("CwelNaEkranie",{item={id=11676, count=1},text="cwele na ekranie"},macro(500, "Alarm - Gracz na ekranie", function()
   for _, creature in ipairs(getSpectators()) do
     if creature:isPlayer() and creature:getName() ~= name() then
       playSound("/sounds/magnum.ogg")
-      modules.game_textmessage.displayGameMessage("? Gracz: " .. creature:getName() .. " na ekranie!", MESSAGE_STATUS_WARNING)
+      modules.game_textmessage.displayGameMessage("Gracz " .. creature:getName() .. " na ekranie!", MESSAGE_STATUS_WARNING)
       return 
     end
   end
 end))
 
 
------alarm zbieracz
-local itemIdToWatch =  12460
-local itemThreshold = 100
-
-macro(2500, "Item Alarm", function()
-  local count = 0
-  for _, container in pairs(g_game.getContainers()) do
-    for _, item in ipairs(container:getItems()) do
-      if item:getId() == itemIdToWatch then
-        count = count + item:getCount()
-      end
-    end
-  end
-  
-  if count >= itemThreshold then
-    playSound("/sounds/magnum.ogg")
-    modules.game_textmessage.displayGameMessage("Masz " .. count .. "x itemka!", MESSAGE_STATUS_WARNING)
-
-  end
-end)
 
 
----autoparty
-local kurwiszony_do_party = {
-  "Anakonda",
-  "Nahill",
-}
 
-local function contains(table, val)
-  for i = 1, #table do
-    if table[i]:lower() == val:lower() then
-      return true
-    end
-  end
-  return false
-end
 
-macro(2000, "Auto Party Invite", function()
-  for _, spec in ipairs(getSpectators()) do
-    if contains(kurwiszony_do_party, spec:getName()) and not spec:isPartyMember() then
-      g_game.partyInvite(spec:getId())
-      modules.game_textmessage.displayGameMessage("? Zaproszono do party: " .. spec:getName(), MESSAGE_STATUS_WARNING)
-    end
-  end
-end)
 
 ----wyrzutnia hajsu
-local itemId = 3031
+local itemId = 3043
 local positions = {
   {x = 1, y = 0}, {x = -1, y = 0}, {x = 0, y = 1}, {x = 0, y = -1},
   {x = 1, y = 1}, {x = 1, y = -1}, {x = -1, y = 1}, {x = -1, y = -1}
@@ -342,8 +404,30 @@ macro(1000, "Wyrzutnia hajsu", function()
     end
   end
 end)
+---podbiegacz
+local directions = {
+  [-1] = {[-1] = NorthWest, [0] = West, [1] = SouthWest},
+  [0]  = {[-1] = North,     [1] = South},
+  [1]  = {[-1] = NorthEast, [0] = East, [1] = SouthEast}
+}
+addIcon("Podbiegacz", {item = {id=11676, count = 1}, text = "Podbij"},macro(200, "Podbiegacz", function()
+    local target = g_game.getAttackingCreature()
+    if not target or target:isDead() then return end
 
-
+    local tpos, mpos = target:getPosition(), pos()
+    
+    local dx = tpos.x - mpos.x
+    local dy = tpos.y - mpos.y
+    local dirX = (dx > 0) and 1 or (dx < 0) and -1 or 0
+    local dirY = (dy > 0) and 1 or (dy < 0) and -1 or 0
+    
+    if getDistanceBetween(mpos, tpos) > 1 then
+      local direction = directions[dirX] and directions[dirX][dirY]
+      if direction then
+        g_game.walk(direction)
+      end
+    end
+end))
 
 
 
@@ -412,13 +496,5 @@ onCreaturePositionChange(function(creature, newPos, oldPos)
         toFollowPos[newPos.z] = newPos
     end
 end)
-
-
-
-
-
-
-
-
 
 
