@@ -408,37 +408,6 @@ local directions = {
   [0]  = {[-1] = North,     [1] = South},
   [1]  = {[-1] = NorthEast, [0] = East, [1] = SouthEast}
 }
-addIcon("Podbiegacz", {item = {id=11676, count = 1}, text = "Podbij"},macro(200, "Podbiegacz", function()
-    local target = g_game.getAttackingCreature()
-    if not target or target:isDead() then return end
-
-    local tpos, mpos = target:getPosition(), pos()
-    
-    local dx = tpos.x - mpos.x
-    local dy = tpos.y - mpos.y
-    local dirX = (dx > 0) and 1 or (dx < 0) and -1 or 0
-    local dirY = (dy > 0) and 1 or (dy < 0) and -1 or 0
-    
-    if getDistanceBetween(mpos, tpos) > 1 then
-      local direction = directions[dirX] and directions[dirX][dirY]
-      if direction then
-        g_game.walk(direction)
-      end
-    end
-end))
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 -----follow-----ten skrypt ma byc last
 followName = "autofollow"
