@@ -1,6 +1,6 @@
-----DUDEK SCRIPTS-------
+----BOTZILLA by DUDEKx2137-------
 -- setDefaultTab("Skrypcioszki")
-
+UI.Label("skrypty by dudekx2137")
 ------leczenie herowater------
 local hwId = 3158
 addIcon("HwMana&&Hp", {item={id= 11676, count=1}, text="Hw"}, macro(500, function()
@@ -124,7 +124,7 @@ addIcon("buy soldier", {item={id= 11676, count=1}, text="Bsp"}, macro(500, funct
 end))
 -----kupowanie special pilli-------
 addIcon("buy special", {item={id= 11676, count=1}, text="Bspp"}, macro(500, function()
-  if itemAmount(9537) <= 100 then
+  if itemAmount(9537) <= 100 and itemAmount(3043) >= 2 then
     say("!buy special pills")
     delay(ex)
    end
@@ -218,86 +218,87 @@ end))
 ---useitem
 UI.Label("----UseItem----")
 UI.Label("ID itema do uzycia:")
-    storage.cItem = storage.cItem or '9058'
-    addTextEdit("skuryItemki", storage.cItem, function(widget, text)
-        storage.cItem = text
-    end)
-    macro(500, "Useitem", function()
-        local itemId = tonumber(storage.cItem)
-        if itemId then
-            use(itemId)
-        end
-    end)
+storage.cItem = storage.cItem or '9058'
+addTextEdit("skuryItemki", storage.cItem, function(widget, text)
+  storage.cItem = text
+end)
+macro(500, "Useitem", function()
+    local itemId = tonumber(storage.cItem)
+    if itemId then
+      use(itemId)
+  end
+end)
+--autoparty
 UI.Label("----AutoParty----")
-UI.Label("Podaj nicki graczy do party:")
----autoparty
-local kurwiszony_do_party = {}
-
-local function contains(table, val)
-  for i = 1, #table do
-    if table[i]:lower() == val:lower() then
-      return true
-    end
-  end
-  return false
-end
-local function updatePartyList(widget, text)
-  kurwiszony_do_party = {}
+UI.Label("Podaj nicki graczy do party (oddzielone przecinkiem):")
+storage.partyNames = storage.partyNames or ""
+  
+local function splitNames(text)
+  local list = {}
   for name in text:gmatch("[^,]+") do
-    table.insert(kurwiszony_do_party, name:trim())
+    table.insert(list, name:trim())
   end
+  return list
 end
-addTextEdit("PartyNames", table.concat(kurwiszony_do_party, ", "), function(widget, text)
-  updatePartyList(widget, text)
+addTextEdit("PartyNames", storage.partyNames, function(widget, text)
+  storage.partyNames = text
 end)
+
 macro(2000, "Auto Party Invite", function()
-  for _, spec in ipairs(getSpectators()) do
-    if contains(kurwiszony_do_party, spec:getName()) and not spec:isPartyMember() then
-      g_game.partyInvite(spec:getId())
-      modules.game_textmessage.displayGameMessage("? Zaproszono do party: " .. spec:getName(), MESSAGE_STATUS_WARNING)
+  local partyList = splitNames(storage.partyNames)
+    for _, spec in ipairs(getSpectators()) do
+      for _, name in ipairs(partyList) do
+        if spec:getName():lower() == name:lower() and not spec:isPartyMember() then
+          g_game.partyInvite(spec:getId())
+          modules.game_textmessage.displayGameMessage("Zaproszono do party: " .. spec:getName(), MESSAGE_STATUS_WARNING)
+      end
     end
   end
 end)
+    
+
 --alarm gdy uzbiera itemy
 UI.Label("----ItemAlarm----")
-local itemIdToWatch = 0
-local itemThreshold = 100
 
-local function updateItemId(widget, text)
-  itemIdToWatch = tonumber(text) or itemIdToWatch
-end
+storage.itemAlarmId = storage.itemAlarmId or 0
+storage.itemAlarmCount = storage.itemAlarmCount or 100
 
-local function updateItemThreshold(widget, text)
-  itemThreshold = tonumber(text) or itemThreshold
-end
 UI.Label("Podaj id itemu:")
-addTextEdit("ItemIdInput", tostring(itemIdToWatch), function(widget, text)
-  updateItemId(widget, text)
+addTextEdit("ItemIdInput", tostring(storage.itemAlarmId), function(widget, text)
+  local newId = tonumber(text)
+  if newId then
+    storage.itemAlarmId = newId
+  end
 end)
 
 UI.Label("Podaj ilosc do uzbierania:")
-addTextEdit("ItemThresholdInput", tostring(itemThreshold), function(widget, text)
-  updateItemThreshold(widget, text)
+addTextEdit("ItemThresholdInput", tostring(storage.itemAlarmCount), function(widget, text)
+  local newCount = tonumber(text)
+  if newCount then
+    storage.itemAlarmCount = newCount
+  end
 end)
 
-addIcon("ItemAlarm", {item={id = 11676, count=1}, text="Item Alarm"},macro(2500, "Item Alarm", function()
+addIcon("ItemAlarm", {item={id = 11676, count=1}, text="Alarm Item"}, macro(2500, "Item Alarm", function()
   local count = 0
   for _, container in pairs(g_game.getContainers()) do
     for _, item in ipairs(container:getItems()) do
-      if item:getId() == itemIdToWatch then
+      if item:getId() == storage.itemAlarmId then
         count = count + item:getCount()
       end
     end
   end
-  
-  if count >= itemThreshold then
+
+  if count >= storage.itemAlarmCount then
     playSound("/sounds/magnum.ogg")
-    modules.game_textmessage.displayGameMessage("Masz " .. count .. "x itemka!", MESSAGE_STATUS_WARNING)
+    modules.game_textmessage.displayGameMessage("Masz " .. count .. "x itema!", MESSAGE_STATUS_WARNING)
   end
 end))
+
 UI.Separator()
 
 ------pauzowanie targetingu/cavebota--------
+
 local function setIcon(widget)
   widget.setOn(false)
   widget:setHeight(15)
@@ -364,7 +365,7 @@ macro(1000, " HP %", function()
   end
 end)
 ----alarm target
-addIcon("TargetAlarm",{item = {id = 11676, count=1},text="Target Alarm"},macro(500, "Target Alarm", function()
+addIcon("TargetAlarm",{item = {id = 11676, count=1},text="Alarm Target"},macro(500, "Target Alarm", function()
   if not g_game.isAttacking() then
     playSound("/sounds/alarm.ogg")
       delay(5000)
@@ -372,7 +373,7 @@ addIcon("TargetAlarm",{item = {id = 11676, count=1},text="Target Alarm"},macro(5
 end))
 
 ---alarm gracze-----
-addIcon("CwelNaEkranie",{item={id=11676, count=1},text="cwele na ekranie"},macro(500, "Alarm - Gracz na ekranie", function()
+addIcon("CwelNaEkranie",{item={id=11676, count=1},text="Alarm Gracze"},macro(500, "Alarm - Gracz na ekranie", function()
   for _, creature in ipairs(getSpectators()) do
     if creature:isPlayer() and creature:getName() ~= name() then
       playSound("/sounds/magnum.ogg")
@@ -381,9 +382,6 @@ addIcon("CwelNaEkranie",{item={id=11676, count=1},text="cwele na ekranie"},macro
     end
   end
 end))
-
-
-
 
 
 
@@ -450,12 +448,12 @@ UI.Label("Auto Follow")
 followTE = UI.TextEdit(storage[followName].player or "name", function(widget, newText)
     storage[followName].player = newText
 end)
-UI.Label("Walk Delay")
-UI.TextEdit(storage.delayf or "100", function(widget, newText)
-    storage.delayf = newText
-end)
+-- UI.Label("Walk Delay")
+-- UI.TextEdit(storage.delayf or "100", function(widget, newText)
+--     storage.delayf = newText
+-- end)
 local toFollowPos = {}
-local followChange = macro(500, "Follow Change", function() end)
+local followChange = macro(500, function() end)
 local followMacro = macro(20, "Follow", function()
     local target = getCreatureByName(storage[followName].player)
     if target then
@@ -496,5 +494,3 @@ onCreaturePositionChange(function(creature, newPos, oldPos)
         toFollowPos[newPos.z] = newPos
     end
 end)
-
-
