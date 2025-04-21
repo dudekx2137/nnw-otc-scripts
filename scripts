@@ -509,13 +509,15 @@ end
 
 local function updateLootUI()
   lootTab:destroyChildren()
-  lootTab:addChild(UI.Label("Loot Log:"))
   lootTab:addChild(UI.Button("Wyczysc loot log", function()
     storage.lootLog = {}
     updateLootUI()
   end))
+  lootTab:addChild(UI.Label("Loot Log:"))
   lootTab:addChild(UI.Separator())
-  for _, line in ipairs(storage.lootLog) do
+
+  for i = #storage.lootLog, 1, -1 do
+    local line = storage.lootLog[i]
     lootTab:addChild(UI.Label(line))
   end
 end
