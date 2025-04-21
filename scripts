@@ -295,6 +295,28 @@ addIcon("ItemAlarm", {item={id = 11676, count=1}, text="Alarm Item"}, macro(2500
   end
 end))
 
+
+UI.Label("----attack graczy----")
+
+addLabel("targettext", "Nicki cweli do ataku (oddzielone przecinkiem):")
+addTextEdit("followleader", storage.targetName or "Player1,Player2", function(widget, text)
+  storage.targetName = text
+end)
+  
+macro(100, "Attack Player", function()
+  if not storage.targetName or storage.targetName == "" then return end
+  for name in storage.targetName:gmatch("[^,]+") do
+    local trimmedName = name:trim()
+    local target = getCreatureByName(trimmedName)
+    if target and not g_game.isAttacking() then
+      g_game.attack(target)
+      break
+    end
+  end
+end)
+
+
+
 UI.Separator()
 
 ------pauzowanie targetingu/cavebota--------
@@ -463,3 +485,47 @@ onCreaturePositionChange(function(creature, newPos, oldPos)
         toFollowPos[newPos.z] = newPos
     end
 end)
+UI.Separator()
+
+
+
+
+
+
+
+
+
+
+-------------loot log--------------
+storage.lootLog = storage.lootLog or {}
+local lootTab = addTab("Loot Log")
+
+local function addLootLine(text)
+  local line = os.date("[%H:%M:%S] ") .. text
+  if not table.contains(storage.lootLog, line) then
+    table.insert(storage.lootLog, line)
+  end
+end
+
+local function updateLootUI()
+  lootTab:destroyChildren()
+  lootTab:addChild(UI.Label("Loot Log:"))
+  lootTab:addChild(UI.Button("Wyczysc loot log", function()
+    storage.lootLog = {}
+    updateLootUI()
+  end))
+  lootTab:addChild(UI.Separator())
+  for _, line in ipairs(storage.lootLog) do
+    lootTab:addChild(UI.Label(line))
+    lootTab:addChild(UI.Separator())
+  end
+end
+
+onTextMessage(function(mode, text)
+  if text:lower():find("loot of a ") then
+    addLootLine(text)
+    updateLootUI()
+  end
+end)
+
+updateLootUI()
