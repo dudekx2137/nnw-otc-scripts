@@ -517,7 +517,6 @@ local function updateLootUI()
   lootTab:addChild(UI.Separator())
   for _, line in ipairs(storage.lootLog) do
     lootTab:addChild(UI.Label(line))
-    lootTab:addChild(UI.Separator())
   end
 end
 
