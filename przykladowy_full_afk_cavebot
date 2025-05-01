@@ -1,0 +1,129 @@
+label:start
+goto:4621,2515,7
+goto:4615,2520,7
+goto:4609,2520,7
+goto:4608,2514,7
+goto:4607,2508,7
+goto:4607,2514,7
+goto:4601,2518,7
+goto:4595,2517,7
+goto:4595,2511,7
+goto:4593,2505,7
+goto:4595,2511,7
+goto:4597,2517,7
+goto:4599,2523,7
+goto:4603,2529,7
+goto:4605,2535,7
+goto:4605,2529,7
+goto:4611,2525,7
+goto:4616,2531,7
+goto:4622,2528,7
+goto:4628,2529,7
+goto:4622,2529,7
+goto:4618,2535,7
+goto:4617,2541,7
+goto:4617,2547,7
+goto:4616,2553,7
+goto:4610,2556,7
+goto:4616,2556,7
+goto:4622,2553,7
+goto:4628,2552,7
+goto:4634,2553,7
+goto:4640,2552,7
+goto:4641,2558,7
+goto:4640,2552,7
+goto:4634,2552,7
+goto:4628,2552,7
+goto:4622,2552,7
+goto:4618,2546,7
+goto:4618,2540,7
+goto:4618,2534,7
+goto:4612,2531,7
+goto:4611,2525,7
+function:[[
+
+if storage.lootCount > 1001 then
+
+  CaveBot.gotoLabel("back")
+
+  storage.lootCount = 0
+
+else
+
+  CaveBot.gotoLabel("start")
+
+  
+
+end
+
+return true
+
+
+]]
+label:back
+goto:4608,2524,7
+goto:4614,2521,7
+goto:4620,2519,7
+goto:4626,2514,7
+goto:4632,2513,7
+goto:4634,2509,7
+say:hi
+delay:1000
+say:konoha gakure
+goto:2914,1399,7
+goto:2916,1405,7
+goto:2919,1408,7
+goto:2918,1410,6
+function:[[
+
+NPC.say("hi")
+
+return true
+
+
+]]
+delay:1000
+function:[[
+
+NPC.say("perfect susanoo tier iv")
+
+return true
+
+
+]]
+delay:1000
+function:[[
+
+NPC.say("perfect susanoo tier iv")
+
+return true
+
+
+]]
+goto:2916,1413,7
+goto:2913,1416,7
+goto:2911,1418,7
+goto:2911,1420,7
+goto:2911,1421,7
+say:hi
+delay:1000
+say:susanoo realms
+goto:2911,1423,6
+goto:5308,3033,7
+goto:5308,3039,7
+goto:5311,3043,7
+goto:4634,2511,7
+goto:4628,2515,7
+goto:4622,2515,7
+goto:2911,1420,6
+goto:2911,1421,6
+extensions:[[
+{
+  "Depositer": [
+
+  ],
+  "Supply": [
+
+  ]
+}
+]]
