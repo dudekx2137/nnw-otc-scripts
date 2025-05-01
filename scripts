@@ -294,27 +294,6 @@ addIcon("ItemAlarm", {item={id = 11676, count=1}, text="Alarm Item"}, macro(2500
 end))
 
 
-UI.Label("----attack graczy----")
-
-addLabel("targettext", "Nicki cweli do ataku (oddzielone przecinkiem):")
-addTextEdit("followleader", storage.targetName or "Player1,Player2", function(widget, text)
-  storage.targetName = text
-end)
-  
-macro(100, "Attack Player", function()
-  if not storage.targetName or storage.targetName == "" then return end
-  for name in storage.targetName:gmatch("[^,]+") do
-    local trimmedName = name:trim()
-    local target = getCreatureByName(trimmedName)
-    if target and not g_game.isAttacking() then
-      g_game.attack(target)
-      break
-    end
-  end
-end)
-
-
-
 UI.Separator()
 
 ------pauzowanie targetingu/cavebota--------
@@ -424,12 +403,6 @@ macro(1000, "Wyrzutnia hajsu", function()
     end
   end
 end)
----podbiegacz
-local directions = {
-  [-1] = {[-1] = NorthWest, [0] = West, [1] = SouthWest},
-  [0]  = {[-1] = North,     [1] = South},
-  [1]  = {[-1] = NorthEast, [0] = East, [1] = SouthEast}
-}
 
 -----follow-----ten skrypt ma byc last
 followName = "autofollow"
@@ -496,9 +469,7 @@ UI.Separator()
 storage.lootLog = storage.lootLog or {}
 storage.maxLootLines = tonumber(storage.maxLootLines) or 1000
 storage.lootCount = storage.lootCount or 0
-
 local lootTab = addTab("Loot Log")
-
 local function addLootLine(text)
   storage.lootCount = storage.lootCount + 1
   local line = string.format("%d. [%s] %s", storage.lootCount, os.date("%H:%M:%S"), text)
@@ -520,7 +491,7 @@ local function updateLootUI()
 
   lootTab:addChild(UI.Separator())
 
-  lootTab:addChild(UI.Label("Max. liczba wpisow:"))
+  lootTab:addChild(UI.Label("Max. liczba wpisow(zalecane 400):"))
   local input = UI.TextEdit(tostring(storage.maxLootLines), function(widget, text)
     local val = tonumber(text)
     if val and val >= 1 then
