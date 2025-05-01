@@ -1,5 +1,3 @@
-----BOTZILLA by DUDEKx2137-------
--- setDefaultTab("Skrypcioszki")
 UI.Label("skrypty by dudekx2137")
 ------leczenie herowater------
 local hwId = 3158
@@ -395,12 +393,14 @@ addIcon("TargetAlarm",{item = {id = 11676, count=1},text="Alarm Target"},macro(5
 end))
 
 ---alarm gracze-----
-addIcon("CwelNaEkranie",{item={id=11676, count=1},text="Alarm Gracze"},macro(500, "Alarm - Gracz na ekranie", function()
+addIcon("CwelNaEkranie", { item = { id = 11676, count = 1 }, text = "Alarm Gracze" }, macro(500, "Alarm - Gracz na ekranie", function()
   for _, creature in ipairs(getSpectators()) do
-    if creature:isPlayer() and creature:getName() ~= name() then
+    if creature:isPlayer()
+       and creature:getName() ~= name()
+       and not creature:isPartyMember() then
       playSound("/sounds/magnum.ogg")
       modules.game_textmessage.displayGameMessage("Gracz " .. creature:getName() .. " na ekranie!", MESSAGE_STATUS_WARNING)
-      return 
+      return
     end
   end
 end))
@@ -439,10 +439,7 @@ UI.Label("Auto Follow")
 followTE = UI.TextEdit(storage[followName].player or "name", function(widget, newText)
     storage[followName].player = newText
 end)
--- UI.Label("Walk Delay")
--- UI.TextEdit(storage.delayf or "100", function(widget, newText)
---     storage.delayf = newText
--- end)
+
 local toFollowPos = {}
 local followChange = macro(500, function() end)
 local followMacro = macro(20, "Follow", function()
@@ -494,30 +491,49 @@ UI.Separator()
 
 
 
+-----Loot Log-----
 
-
--------------loot log--------------
 storage.lootLog = storage.lootLog or {}
+storage.maxLootLines = tonumber(storage.maxLootLines) or 1000
+storage.lootCount = storage.lootCount or 0
+
 local lootTab = addTab("Loot Log")
 
 local function addLootLine(text)
-  local line = os.date("[%H:%M:%S] ") .. text
-  if not table.contains(storage.lootLog, line) then
-    table.insert(storage.lootLog, line)
+  storage.lootCount = storage.lootCount + 1
+  local line = string.format("%d. [%s] %s", storage.lootCount, os.date("%H:%M:%S"), text)
+  table.insert(storage.lootLog, 1, line)
+  while #storage.lootLog > storage.maxLootLines do
+    table.remove(storage.lootLog)
   end
 end
 
 local function updateLootUI()
   lootTab:destroyChildren()
+  lootTab:addChild(UI.Label("Loot Log:"))
+
   lootTab:addChild(UI.Button("Wyczysc loot log", function()
     storage.lootLog = {}
+    storage.lootCount = 0 
     updateLootUI()
   end))
-  lootTab:addChild(UI.Label("Loot Log:"))
+
   lootTab:addChild(UI.Separator())
 
-  for i = #storage.lootLog, 1, -1 do
-    local line = storage.lootLog[i]
+  lootTab:addChild(UI.Label("Max. liczba wpisow:"))
+  local input = UI.TextEdit(tostring(storage.maxLootLines), function(widget, text)
+    local val = tonumber(text)
+    if val and val >= 1 then
+      storage.maxLootLines = val
+    else
+      widget:setText(tostring(storage.maxLootLines))
+    end
+  end)
+  lootTab:addChild(input)
+
+  lootTab:addChild(UI.Separator())
+
+  for _, line in ipairs(storage.lootLog) do
     lootTab:addChild(UI.Label(line))
   end
 end
@@ -530,3 +546,13 @@ onTextMessage(function(mode, text)
 end)
 
 updateLootUI()
+
+--licznik mobow---
+local licznikIcon = nil
+macro(1000, function()
+  if licznikIcon then
+    licznikIcon:destroy()
+  end
+  licznikIcon = addIcon("Licznik", {item = {id = 11676, count = 1}, text = "Zabito: " .. storage.lootCount }, function() end)
+end)
+
