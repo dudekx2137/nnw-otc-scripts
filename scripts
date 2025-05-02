@@ -464,7 +464,7 @@ UI.Separator()
 
 
 
------Loot Log-----
+-----Loot Log + counter-----
 
 storage.lootLog = storage.lootLog or {}
 storage.maxLootLines = tonumber(storage.maxLootLines) or 1000
@@ -490,7 +490,15 @@ local function updateLootUI()
   end))
 
   lootTab:addChild(UI.Separator())
-
+  lootTab:addChild(UI.Label("Stan licznika:"))
+  local inp = UI.TextEdit(tostring(storage.lootCount), function(widget, text)
+    local val = tonumber(text)
+    if val and val >= 1 then
+        storage.lootCount = val    
+    end
+ end)
+ lootTab:addChild(inp)
+  lootTab:addChild(UI.Separator())
   lootTab:addChild(UI.Label("Max. liczba wpisow(zalecane 400):"))
   local input = UI.TextEdit(tostring(storage.maxLootLines), function(widget, text)
     local val = tonumber(text)
@@ -526,4 +534,3 @@ macro(1000, function()
   end
   licznikIcon = addIcon("Licznik", {item = {id = 11676, count = 1}, text = "Zabito: " .. storage.lootCount }, function() end)
 end)
-
