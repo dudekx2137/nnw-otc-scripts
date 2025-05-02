@@ -454,13 +454,17 @@ UI.Separator()
 storage.lootLog = storage.lootLog or {}
 storage.maxLootLines = tonumber(storage.maxLootLines) or 1000
 storage.lootCount = storage.lootCount or 0
+storage.isLootLogEnabled = storage.isLootLogEnabled ~= nil and storage.isLootLogEnabled or false
 local lootTab = addTab("Loot Log")
+
 local function addLootLine(text)
   storage.lootCount = storage.lootCount + 1
-  local line = string.format("%d. [%s] %s", storage.lootCount, os.date("%H:%M:%S"), text)
-  table.insert(storage.lootLog, 1, line)
-  while #storage.lootLog > storage.maxLootLines do
-    table.remove(storage.lootLog)
+  if storage.isLootLogEnabled then
+    local line = string.format("%d. [%s] %s", storage.lootCount, os.date("%H:%M:%S"), text)
+    table.insert(storage.lootLog, 1, line)
+    while #storage.lootLog > storage.maxLootLines do
+      table.remove(storage.lootLog)
+    end
   end
 end
 
@@ -470,7 +474,6 @@ local function updateLootUI()
 
   lootTab:addChild(UI.Button("Wyczysc loot log", function()
     storage.lootLog = {}
-    storage.lootCount = 0 
     updateLootUI()
   end))
 
@@ -479,12 +482,12 @@ local function updateLootUI()
   local inp = UI.TextEdit(tostring(storage.lootCount), function(widget, text)
     local val = tonumber(text)
     if val and val >= 1 then
-        storage.lootCount = val    
+      storage.lootCount = val
     end
- end)
- lootTab:addChild(inp)
+  end)
+  lootTab:addChild(inp)
   lootTab:addChild(UI.Separator())
-  lootTab:addChild(UI.Label("Max. liczba wpisow(zalecane 400):"))
+  lootTab:addChild(UI.Label("Max. liczba wpisow(zalecane 100):"))
   local input = UI.TextEdit(tostring(storage.maxLootLines), function(widget, text)
     local val = tonumber(text)
     if val and val >= 1 then
@@ -497,8 +500,19 @@ local function updateLootUI()
 
   lootTab:addChild(UI.Separator())
 
-  for _, line in ipairs(storage.lootLog) do
-    lootTab:addChild(UI.Label(line))
+  local toggleButton = UI.Button(storage.isLootLogEnabled and "Wylacz Log" or "Wlacz Log", function()
+    storage.isLootLogEnabled = not storage.isLootLogEnabled
+    updateLootUI()
+  end)
+  lootTab:addChild(toggleButton)
+  lootTab:addChild(UI.Separator())
+
+  if storage.isLootLogEnabled then
+    for _, line in ipairs(storage.lootLog) do
+      lootTab:addChild(UI.Label(line))
+    end
+  else
+    lootTab:addChild(UI.Label("Log wylaczony."))
   end
 end
 
@@ -511,7 +525,7 @@ end)
 
 updateLootUI()
 
---licznik mobow---
+
 local licznikIcon = nil
 macro(1000, function()
   if licznikIcon then
