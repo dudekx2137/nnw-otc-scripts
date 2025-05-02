@@ -1,7 +1,6 @@
 local author = "skrypty by dudekx2137"
 local authorLabel = UI.Label(author)
 local myAuthorLabel = authorLabel
-local isScriptEnabled = true
 ------leczenie herowater------
 local hwId = 3158
 addIcon("HwMana&&Hp", {item={id= 11676, count=1}, text="Hw"}, macro(500, function()
@@ -105,7 +104,7 @@ end)
 addTextEdit("spell2", storage.spell2 , function(widget, text)
     storage.spell2 = text
 end)
-
+local isScriptEnabled = true
 UI.Separator()
 -----buff-----
 UI.Label("BUFF");
