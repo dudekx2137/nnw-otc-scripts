@@ -45,11 +45,11 @@ addTextEdit("spell1", storage.spell1 , function(widget, text)
   storage.spell1 = text
 end)
 addTextEdit("spell2", storage.spell2 , function(widget, text) 
-  storage.spell2 = text
+  storage.spell2 = text 
 end)
 
 ----target exp - aoe
-UI.Label("EXP");
+UI.Label("AOE");
 addIcon("PVESPELL", {item={id= 11676, count=1}, text="PVE"}, macro(250,  function()
   local distance = 2
   local mobsAmount = 3
@@ -64,18 +64,12 @@ if (specAmount >= mobsAmount) then
   say(storage.spell3)
   
 else
-  say(storage.spell4)
-  say(storage.spell5)
+  say(storage.spell1)
+  say(storage.spell2)
 end
 end))
 addTextEdit("spell3", storage.spell3 , function(widget, text) 
   storage.spell3 = text
-end)
-addTextEdit("spell4", storage.spell4 , function(widget, text) 
-  storage.spell4 = text
-end)
-addTextEdit("spell5", storage.spell5 , function(widget, text) 
-  storage.spell5 = text
 end)
 UI.Separator()
 -----buff-----
@@ -89,7 +83,7 @@ addTextEdit("Buff Spell", storage.buffSpell , function(widget, text)
   storage.buffSpell = text
 end)
 ----Niesmiertelka-----
-UI.Label("IMMO");
+UI.Label("IMMO/ABS 50%");
 local belowHp = 50
 storage.immortalSpell = storage.immortalSpell
 addIcon("immortalka", {item={id= 11676, count=1}, text="Immo"}, macro(100, function()
@@ -384,9 +378,6 @@ addIcon("CwelNaEkranie", { item = { id = 11676, count = 1 }, text = "Alarm Gracz
   end
 end))
 
-
-
-
 ----wyrzutnia hajsu
 local itemId = 3043
 local positions = {
@@ -404,7 +395,7 @@ macro(1000, "Wyrzutnia hajsu", function()
   end
 end)
 
------follow-----ten skrypt ma byc last
+-----follow-----
 followName = "autofollow"
 if not storage[followName] then storage[followName] = { player = 'name'} end
 UI.Separator()
@@ -459,13 +450,7 @@ UI.Separator()
 
 
 
-
-
-
-
-
 -----Loot Log + counter-----
-
 storage.lootLog = storage.lootLog or {}
 storage.maxLootLines = tonumber(storage.maxLootLines) or 1000
 storage.lootCount = storage.lootCount or 0
@@ -526,11 +511,11 @@ end)
 
 updateLootUI()
 
---licznik mobow, wykorzystalem tutaj zmienna z poprzedniego skryptu, bez lootloga nie bedzie dzialac ten licznik tu---
+--licznik mobow---
 local licznikIcon = nil
 macro(1000, function()
   if licznikIcon then
     licznikIcon:destroy()
   end
-  licznikIcon = addIcon("Licznik", {item = {id = 11676, count = 1}, text = "Zabito: " .. storage.lootCount }, function() end)
+  licznikIcon = addIcon("Licznik", { text = "Zabito: " .. storage.lootCount}, function() end)
 end)
