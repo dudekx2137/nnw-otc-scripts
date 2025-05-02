@@ -526,7 +526,7 @@ end)
 
 updateLootUI()
 
---licznik mobow---
+--licznik mobow, wykorzystalem tutaj zmienna z poprzedniego skryptu, bez lootloga nie bedzie dzialac ten licznik tu---
 local licznikIcon = nil
 macro(1000, function()
   if licznikIcon then
